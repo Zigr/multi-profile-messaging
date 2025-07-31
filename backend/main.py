@@ -1,5 +1,6 @@
 import os
 from fastapi import FastAPI, HTTPException
+from routers import profile, template, list_manager, logs
 from pydantic import BaseModel
 from connectors.smtp_connector import SMTPConnector
 from connectors.playwright_auth import PlaywrightAuth
@@ -53,3 +54,9 @@ def telegram_login(req: AuthRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Playwright auth failed: {e}")
     return {"cookies": cookies_json}
+
+# include CRUD routers
+app.include_router(profile.router)
+app.include_router(template.router)
+app.include_router(list_manager.router)
+app.include_router(logs.router)
