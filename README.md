@@ -1,4 +1,4 @@
-# Mailer Project
+# Multi-profile-messaging
 
 ## Setup
 
