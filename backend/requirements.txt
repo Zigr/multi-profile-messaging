@@ -7,3 +7,4 @@ python-dotenv
 celery[redis]
 redis
 playwright
+alembic>=1.8
