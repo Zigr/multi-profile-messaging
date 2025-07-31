@@ -1,12 +1,15 @@
 import os
 import sys
 from logging.config import fileConfig
+from dotenv import load_dotenv
 
 from sqlalchemy import engine_from_config, pool
 from alembic import context
 
+load_dotenv()
+
 # ensure our backend module is on PYTHONPATH
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -18,6 +21,8 @@ if config.config_file_name:
 
 from database import Base
 
+# **IMPORT YOUR MODELS SO THEY REGISTER ON Base.metadata**
+import models  # noqa: E402
 # Import your Base
 target_metadata = Base.metadata
 

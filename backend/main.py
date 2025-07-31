@@ -55,7 +55,7 @@ def telegram_login(req: AuthRequest):
         raise HTTPException(status_code=500, detail=f"Playwright auth failed: {e}")
     return {"cookies": cookies_json}
 
-# include CRUD routers
+# existing endpoints...
 app.include_router(profile.router)
 app.include_router(template.router)
 app.include_router(list_manager.router)
