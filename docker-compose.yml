@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - backend/.env
+    depends_on:
+      - redis
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+  redis:
+    image: redis:alpine
+  mailcatcher:
+    image: schickling/mailcatcher
+    ports:
+      - "1025:1025"   # SMTP
+      - "1080:1080"   # Web UI

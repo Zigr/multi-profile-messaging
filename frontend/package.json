@@ -1,0 +1,17 @@
+{
+    "name": "mailer-ui",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "@chakra-ui/react": "^2.5.1",
+        "@emotion/react": "^11",
+        "@emotion/styled": "^11",
+        "framer-motion": "^10"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build"
+    }
+}
