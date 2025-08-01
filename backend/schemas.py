@@ -1,5 +1,7 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from pydantic import ConfigDict
 from typing import Optional
+
 import enum
 
 
@@ -29,8 +31,7 @@ class Profile(ProfileBase):
     id: int
     created_at: Optional[str]
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # >>> Templates
@@ -48,8 +49,7 @@ class Template(TemplateBase):
     id: int
     created_at: Optional[str]
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # >>> List Entries
@@ -66,8 +66,7 @@ class ListEntryCreate(ListEntryBase):
 class ListEntry(ListEntryBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # >>> Logs
@@ -79,5 +78,4 @@ class LogEntry(BaseModel):
     detail: Optional[str]
     timestamp: Optional[str]
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

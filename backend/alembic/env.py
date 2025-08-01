@@ -34,7 +34,6 @@ config.set_main_option('sqlalchemy.url', get_url())
 
 def run_migrations_offline():
     url = config.get_main_option('sqlalchemy.url')
-    print(f"Running migrations offline with URL: {url}")
     context.configure(
         url=url,
         target_metadata=target_metadata,
