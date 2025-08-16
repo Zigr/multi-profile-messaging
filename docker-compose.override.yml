@@ -1,0 +1,12 @@
+services:
+  backend:
+      develop:
+        watch:
+          - path: ./backend
+            action: sync
+            target: /app
+            ignore:
+              - ./backend/.venv
+              - .venv
+          - path: ./backend/pyproject.toml
+            action: rebuild
