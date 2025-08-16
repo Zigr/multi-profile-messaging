@@ -81,24 +81,26 @@ docker compose stop --remove-orphans
 
 ## 8. Roadmap & Thread Distribution
 
-| Day | Thread Name              | Scope                                                                                      | Status  |
-| --- | ------------------------ | ------------------------------------------------------------------------------------------ |---------|
-| 1–2 | **Setup**                | Repo scaffold, Docker/CI, `database.py`, Alembic init & first migration                    |  [x]    |
-| 3–4 | **Auth & Profiles**      | Playwright login, Telegram connector stub, Profile CRUD endpoints & UI                     |  [⧜]    |
-| 5   | **Email & MailCatcher**  | SMTPConnector (Gmail + MailCatcher toggle), test-email endpoint, front-end toggle          |  [⧜]    |
-| 6   | **Templating & Workers** | Jinja2 integration, preview endpoint, Celery + Redis scaffold, rate-limit setup            |  [  ]   |
-| 7   | **Lists & Proxies**      | Whitelist/blacklist logic, proxy injection in tasks, ListEntry CRUD                        |  [  ]   |
-| 8   | **Logging & Dashboard**  | LogEntry CRUD, Logs API, Campaign dashboard stub in React                                  |  [  ]   |
-| 9   | **UI Polish & Tests**    | Build React pages for Templates/Lists/Logs, add E2E + pytest suites                        |  [  ]   |
-| 10  | **Docs & QA**            | Finalize README, LIVE\_DOC.md, developer guide, deployment scripts, 14-day support kickoff |  [  ]   |
+| Day | Thread Name              | Scope                                                                                      | Status |
+| --- | ------------------------ | ------------------------------------------------------------------------------------------ | ------ |
+| 1–2 | **Setup**                | Repo scaffold, Docker/CI, `database.py`, Alembic init & first migration                    | [x]    |
+| 3–4 | **Auth & Profiles**      | Playwright login, Telegram connector stub, Profile CRUD endpoints & UI                     | [⧜]    |
+| 5   | **Email & MailCatcher**  | SMTPConnector (Gmail + MailCatcher toggle), test-email endpoint, front-end toggle          | [⧜]    |
+| 6   | **Templating & Workers** | Jinja2 integration, preview endpoint, Celery + Redis scaffold, rate-limit setup            | [  ]   |
+| 7   | **Lists & Proxies**      | Whitelist/blacklist logic, proxy injection in tasks, ListEntry CRUD                        | [  ]   |
+| 8   | **Logging & Dashboard**  | LogEntry CRUD, Logs API, Campaign dashboard stub in React                                  | [  ]   |
+| 9   | **UI Polish & Tests**    | Build React pages for Templates/Lists/Logs, add E2E + pytest suites                        | [  ]   |
+| 10  | **Docs & QA**            | Finalize README, LIVE\_DOC.md, developer guide, deployment scripts, 14-day support kickoff | [  ]   |
 
 > **Legend**:
 >
 > - **Thread** = a self-contained area of work.
 > - **Day** = calendar day in our 10-day timeline.
-> - **⧜** = incomplete status, see Pending Decissions & Next Steps
+> - **⧜** = incomplete status, see [Changelog](#9-changelog)
 
-## 9. Pending Decisions & Next Steps
+## 9. Changelog
+
+- *2025-07-31_: Initialized with Setup, Auth & Profiles, Email threads.
 
 [ ] **UI** Change React+Javascript → React@18+Typescript
 [ ] **UI** Use Vite for UI toolchain
@@ -115,11 +117,7 @@ docker compose stop --remove-orphans
 3. Update **LIVE\_DOC.md** with your status before opening a PR.
 4. Tag PR with the day and thread name.(Example feature/)
 
-## 11. Changelog
-
-- *2025-07-31_: Initialized with Setup, Auth & Profiles, Email threads.
-
-## 12 References / Links
+## 11 References / Links
 
 - [GitHub repo:](https://github.com/Zigr/multi-profile-messaging/tree/master)
 - ChatGPT sessions: "Message automation tool"
@@ -128,13 +126,11 @@ docker compose stop --remove-orphans
 
 ### How to use this
 
-1. **Commit `LIVE_DOC.md`** at the root of your monorepo.  
-2. At the start of each day, update the “Roadmap & Thread Distribution” row for that day (e.g. mark it in progress or done).  
+1. **Commit `LIVE_DOC.md`** at the root of your monorepo.
+2. At the start of each day, update the “Roadmap & Thread Distribution” row for that day (e.g. mark it in progress or done).
 3. Under **Changelog**, append a line with date and summary of completed threads.
 
 This gives everyone on the project a single “source of truth” that evolves in lockstep with your commits.
 
 Let me know if you’d like tweaks to the sections or the thread naming!
 ::contentReference[oaicite:0]{index=0}
-```
-
