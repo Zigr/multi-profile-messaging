@@ -1,6 +1,7 @@
+from datetime import datetime
 from pydantic import BaseModel
 from pydantic import ConfigDict
-from typing import Optional
+from typing import Any, Optional
 
 import enum
 
@@ -26,11 +27,14 @@ class ProfileBase(BaseModel):
 class ProfileCreate(ProfileBase):
     pass
 
+class ProfileUpdate(ProfileBase):
+    cookies: Optional[Any] = None  # will hold JSON array of cookies
 
 class Profile(ProfileBase):
     id: int
-    created_at: Optional[str]
-
+    created_at: Optional[datetime]
+    updated_at: datetime
+    cookies: Optional[Any] = None
     model_config = ConfigDict(from_attributes=True)
 
 

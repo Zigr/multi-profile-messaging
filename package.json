@@ -1,5 +1,30 @@
 {
-  "dependencies": {
-    "@tanstack/history": "^1.131.2"
+  "name": "playwright-automation",
+  "version": "0.1.0",
+  "description": "Browser-driven automation for capturing session cookies, simulating user workflows, and integrating results back into the backend system",
+  "keywords": [
+    "automation",
+    "playwright",
+    "messaging",
+    "login"
+  ],
+  "private": true,
+  "license": "MIT",
+  "author": "ZIgr",
+  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "pw:install": "playwright install --with-deps chromium",
+    "pw:smoke": "node --loader ts-node/esm automation/playwright/runners/run-script.ts smoke_open",
+    "pw:capture": "node --loader ts-node/esm automation/playwright/runners/run-cookie-capture.ts",
+    "pw:actions": "node --loader ts-node/esm automation/playwright/runners/run-actions.ts",
+    "pw:validate": "node --loader ts-node/esm automation/playwright/runners/run-validate.ts"
+  },
+  "devDependencies": {
+    "playwright": "^1.46.0",
+    "ts-node": "^10.9.2",
+    "typescript": "~5.8.3"
   }
 }

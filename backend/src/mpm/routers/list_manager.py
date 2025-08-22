@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+import csv
+import io
+from fastapi import APIRouter,UploadFile, File, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from mpm.database import SessionLocal
 import mpm.models as models
@@ -44,3 +46,31 @@ def delete_list_entry(entry_id: int, db: Session = Depends(get_db)):
     db.delete(db_e)
     db.commit()
     return
+
+@router.post("/bulk")
+async def bulk_upload_lists(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    if not file.filename or not file.filename.endswith((".csv", ".txt")):
+        raise HTTPException(400, "Please upload a CSV file")
+    content = (await file.read()).decode("utf-8", errors="ignore")
+    reader = csv.DictReader(io.StringIO(content))
+    required = {"profile_id", "type", "value"}
+    if set(map(str.lower, reader.fieldnames or [])) != required:
+        # or use a softer check to allow any order
+        missing = required - set(map(str.lower, reader.fieldnames or []))
+        raise HTTPException(400, f"CSV must contain headers: {', '.join(sorted(required))}. Missing: {', '.join(sorted(missing))}")
+    inserted = skipped = 0
+    for row in reader:
+        try:
+            entry = models.ListEntry(
+                profile_id=int(row["profile_id"]),
+                type=row["type"],  # validate whitelist/blacklist per your enum
+                value=row["value"].strip(),
+            )
+            db.add(entry)
+            inserted += 1
+        except Exception:
+            db.rollback()
+            skipped += 1
+        else:
+            db.commit()
+    return {"inserted": inserted, "skipped": skipped}

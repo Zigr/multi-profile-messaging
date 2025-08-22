@@ -11,6 +11,7 @@ from mpm.database import Base
 import mpm.models as models  # noqa: E402
 
 ENV_FILE=Path(__file__ + "../../../../../../.env").resolve()
+print(ENV_FILE)
 load_dotenv(ENV_FILE)
 # ensure our backend module is on PYTHONPATH
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))

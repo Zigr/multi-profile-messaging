@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from sqlalchemy import (
     Column,
     Integer,
@@ -31,6 +32,12 @@ class Profile(Base):
     credentials = Column(JSON, nullable=False)  # tokens, cookies, SMTP creds, etc.
     proxy = Column(String, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(
+        DateTime(timezone=True),
+        default=datetime.now(timezone.utc),
+        onupdate=datetime.now(timezone.utc),
+    )
+    cookies = Column(JSON, nullable=True)
 
 
 class Template(Base):

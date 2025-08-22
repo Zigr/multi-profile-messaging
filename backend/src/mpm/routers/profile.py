@@ -1,8 +1,10 @@
+from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from mpm.database import SessionLocal, engine, Base
 import mpm.models as models
 import mpm.schemas as schemas
+import logging
 
 # ensure tables exist
 Base.metadata.create_all(bind=engine)
@@ -30,7 +32,9 @@ def create_profile(profile_in: schemas.ProfileCreate, db: Session = Depends(get_
 
 @router.get("/", response_model=list[schemas.Profile])
 def list_profiles(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    return db.query(models.Profile).offset(skip).limit(limit).all()
+    profiles:List[models.Profile] = db.query(models.Profile).offset(skip).limit(limit).all()
+    logging.debug("Profiles output: %s", profiles)
+    return profiles or []
 
 
 @router.get("/{profile_id}", response_model=schemas.Profile)

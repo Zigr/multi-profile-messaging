@@ -1,5 +1,8 @@
 services:
   backend:
+      build:
+        args:
+          MODE: development
       develop:
         watch:
           - path: ./backend
@@ -10,3 +13,27 @@ services:
               - .venv
           - path: ./backend/pyproject.toml
             action: rebuild
+      volumes:
+        - ./backend/data:/app/data
+        - ./backend/log.txt:/app/log.txt
+      environment:
+        DATABASE_PATH: /app/data/mpm.db
+  frontend:
+    build:
+      args:
+        - VITE_API_URL=http://localhost:8000
+        - NODE_ENV=development
+    environment:
+      - VITE_BACKEND_URL=http://localhost:8000
+      - HOST=0.0.0.0       # Bind Vite to all network interfaces
+      - CHOKIDAR_USEPOLLING=true  # For hot reload in Docker
+    env_file:
+      - .env
+    ports:
+      - 5137:5137
+  mailcatcher:
+    container_name: mailcatcher
+    image: schickling/mailcatcher
+    ports:
+      - "1025:1025"   # SMTP
+      - "1080:1080"   # Web UI

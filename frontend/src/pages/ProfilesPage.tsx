@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
     Box,
     Button,
@@ -14,8 +14,10 @@ import {
     Text,
     VStack,
 } from '@chakra-ui/react'
-import { toaster } from "../components/ui/toaster"
 
+import { toaster } from "../components/ui/toaster"
+import { useCreateOrUpdateProfile, useDeleteProfile, useProfiles } from '@/hooks/useProfiles'
+import { useCookieCapture, useCookieRefresh } from '@/hooks/useCookieCapture'
 type Platform = 'email' | 'telegram'
 
 type Profile = {
@@ -41,70 +43,50 @@ const emptyEmailProfile = (): Profile => ({
 })
 
 export default function ProfilesPage() {
-    const [profiles, setProfiles] = useState<Profile[]>([])
+
     const [editing, setEditing] = useState<Profile | null>(null)
     const [loading, setLoading] = useState(false)
+    // TanStack Query data
+    const { data: profiles = [], isLoading, isError, error } = useProfiles()
+    const createOrUpdate = useCreateOrUpdateProfile()
+    const removeProfile = useDeleteProfile()
 
     const isEmail = useMemo(() => editing?.platform === 'email', [editing])
     const useMailcatcher = useMemo(
         () => Boolean(editing?.credentials?.useMailcatcher),
         [editing]
     )
+    const captureCookies = useCookieCapture()
+    const refreshCookies = useCookieRefresh()
 
-    // --- API helpers
-    async function fetchJSON<T>(url: string, init?: RequestInit): Promise<T> {
-        const res = await fetch(url, init)
-        if (!res.ok) {
-            const text = await res.text().catch(() => '')
-            throw new Error(text || res.statusText)
-        }
-        return res.json()
+    // top-level load errors
+    if (isError) {
+        // render once; toast optional
+        console.error(error)
     }
-
-    async function loadProfiles() {
-        const data = await fetchJSON<Profile[]>('/profiles')
-        setProfiles(data)
-    }
-
-    useEffect(() => {
-        loadProfiles().catch((e) =>
-            toaster.create({ title: 'Failed to load profiles', description: String(e), type: 'error' })
-        )
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
     // --- CRUD
     async function saveProfile(p: Profile) {
         setLoading(true)
-        try {
-            const method = p.id ? 'PUT' : 'POST'
-            const url = p.id ? `/profiles/${p.id}` : '/profiles'
-            await fetchJSON(url, {
-                method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(p),
-            })
-            await loadProfiles()
-            setEditing(null)
-            toaster.create({ title: 'Saved', type: 'success' })
-        } catch (e) {
-            toaster.create({ title: 'Save failed', description: String(e), type: 'error' })
-        } finally {
-            setLoading(false)
-        }
+        createOrUpdate.mutate(p, {
+            onSuccess: () => {
+                setEditing(null)
+                toaster.create({ title: 'Saved', type: 'success' })
+            },
+            onError: (e: any) => {
+                toaster.create({ title: 'Save failed', description: String(e), type: 'error' })
+            },
+            onSettled: () => setLoading(false),
+        })
     }
 
     async function deleteProfile(id: number) {
         setLoading(true)
-        try {
-            await fetchJSON(`/profiles/${id}`, { method: 'DELETE' })
-            await loadProfiles()
-            toaster.create({ title: 'Deleted', type: 'success' })
-        } catch (e) {
-            toaster.create({ title: 'Delete failed', description: String(e), type: 'error' })
-        } finally {
-            setLoading(false)
-        }
+        removeProfile.mutate(id, {
+            onSuccess: () => toaster.create({ title: 'Deleted', type: 'success' }),
+            onError: (e: any) =>
+                toaster.create({ title: 'Delete failed', description: String(e), type: 'error' }),
+            onSettled: () => setLoading(false),
+        })
     }
 
     // --- Render
@@ -142,7 +124,11 @@ export default function ProfilesPage() {
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
-                    {profiles.map((p) => (
+                    {isLoading ? (
+                        <Table.Row><Table.ColumnHeader colSpan={3}>Loading…</Table.ColumnHeader></Table.Row>
+                    ) : profiles.length === 0 ? (
+                        <Table.Row><Table.ColumnHeader colSpan={3}>No profiles yet</Table.ColumnHeader></Table.Row>
+                    ) : profiles.map((p) => (
                         <Table.Row key={p.id}>
                             <Table.ColumnHeader>{p.name}</Table.ColumnHeader>
                             <Table.ColumnHeader textTransform="capitalize">{p.platform}</Table.ColumnHeader>
@@ -156,6 +142,42 @@ export default function ProfilesPage() {
                                             Delete
                                         </Button>
                                     ) : null}
+                                    {p.platform !== 'email' && p.id ? (
+                                        <Button
+                                            size="sm"
+                                            onClick={() => {
+                                                const loginUrl = prompt('Enter login URL:', 'https://web.telegram.org/a/') || ''
+                                                if (!loginUrl) return
+                                                captureCookies.mutate(
+                                                    { profile_id: p.id!, login_url: loginUrl, headless: false, max_wait_ms: 120000 },
+                                                    {
+                                                        onSuccess: () => toaster.create({ title: 'Cookies captured', type: 'success' }),
+                                                        onError: (e: any) => toaster.create({ title: 'Capture failed', description: String(e), type: 'error' }),
+                                                    }
+                                                )
+                                            }}
+                                        >
+                                            Capture Cookies
+                                        </Button>
+                                    ) : null}
+
+                                    {p.platform !== 'email' && p.id ? (
+                                        <Button
+                                            size="sm"
+                                            onClick={() =>
+                                                refreshCookies.mutate(
+                                                    { profile_id: p.id!, headless: true },
+                                                    {
+                                                        onSuccess: () => toaster.create({ title: 'Cookies refreshed', type: 'success' }),
+                                                        onError: (e: any) => toaster.create({ title: 'Refresh failed', description: String(e), type: 'error' }),
+                                                    }
+                                                )
+                                            }
+                                        >
+                                            Refresh Cookies
+                                        </Button>
+                                    ) : null}
+
                                 </HStack>
                             </Table.ColumnHeader>
                         </Table.Row>

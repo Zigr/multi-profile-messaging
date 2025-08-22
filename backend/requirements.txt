@@ -7,3 +7,5 @@ pydantic_settings==2.10.1
 pytest==8.4.1
 python-dotenv==1.1.1
 SQLAlchemy==2.0.43
+sqlmodel>=0.0.24
+

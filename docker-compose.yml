@@ -1,31 +1,43 @@
 services:
   backend:
-    build: ./backend
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        MODE: production
+    environment:
+      - PYTHONPATH=/app/src:/app
     ports:
       - "8000:8000"
     env_file:
       - .env
     depends_on:
       - redis
+    command: ["./scripts/start.sh"]
     volumes:
-      - app-db-data:/app/backend
+      - app-db-data:/var/lib/postgresql/data/pgdata
+      - ./backend/uv.lock:/app/uv.lock:cached
+      - ./backend/pyproject.toml:/app/pyproject.toml:cached
   frontend:
+    container_name: frontend
+    environment:
+      - VITE_BACKEND_URL=https://example.com
     build:
       context: ./frontend
+      dockerfile: Dockerfile
       args:
-        - VITE_API_URL=http://localhost:8000
-        - NODE_ENV=development
+        - VITE_API_URL=https://example.com
+        - NODE_ENV=production
     ports:
-      - "3000:3000"
+      - "5173:5173"
     depends_on:
       - backend
 
   redis:
+    container_name: redis
     image: redis:alpine
-  mailcatcher:
-    image: schickling/mailcatcher
-    ports:
-      - "1025:1025"   # SMTP
-      - "1080:1080"   # Web UI
+
 volumes:
       app-db-data: {}
+

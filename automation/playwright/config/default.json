@@ -1,0 +1,6 @@
+{
+    "headless": false,
+    "maxWaitMs": 120000,
+    "userAgent": "",
+    "trace": false
+}

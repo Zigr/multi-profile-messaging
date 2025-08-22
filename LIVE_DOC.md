@@ -101,14 +101,15 @@ docker compose stop --remove-orphans
 ## 9. Changelog
 
 - *2025-07-31_: Initialized with Setup, Auth & Profiles, Email threads.
-
-[ ] **UI** Change React+Javascript → React@18+Typescript
-[ ] **UI** Use Vite for UI toolchain
-[ ] **UI** Use Tanstack Router for frontend application
-[ ] **SMTP Setting** CRUD UI
-[ ] **Auth & Profiles** Profile resource CRUD UI
-[ ] **Email & MailCatcher** frontend toggle
+[x] **UI** Change React+Javascript → React@18+Typescript
+[x] **UI** Use Vite for UI toolchain
+[x] **UI** Use Tanstack Router for frontend application
+[x] **SMTP Setting** CRUD UI
+[x] **Auth & Profiles** Profile resource CRUD UI
+[x] **Email & MailCatcher** frontend toggle
 [ ] **Worker Control** - Endpoints to start/stop campaigns
+
+- *2025-08-16_: New thread "**Playwright Automation**" started
 
 ## 10. How to Contribute
 
@@ -121,6 +122,7 @@ docker compose stop --remove-orphans
 
 - [GitHub repo:](https://github.com/Zigr/multi-profile-messaging/tree/master)
 - ChatGPT sessions: "Message automation tool"
+- [THREADS_SUMMARY](docs/THREAD_SUMMARY.md)
 
 ---
 

@@ -1,9 +1,37 @@
-# Python
-__pycache__
+# Python cache
+__pycache__/
 /__pycache__
 app.egg-info
 *.pyc
-.mypy_cache
+*.pyo
+*.pyd
+*.pycache/
 .coverage
 htmlcov
-.venv
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# Local logs and temp files
+*.log
+*.tmp
+
+# Node/Playwright browser caches (if any)
+playwright/.local-browsers/
+playwright/.cache/
+
+# Docker files
+Dockerfile.dev
+#docker-compose.override.yml
+
+# Git
+.git
+.gitignore
+
+# IDE/editor configs
+.vscode/
+.idea/
+*.swp
+*.swo
